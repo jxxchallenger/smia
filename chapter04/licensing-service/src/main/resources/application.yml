@@ -1,0 +1,11 @@
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "beans,caches,conditions,configprops,env,health,httpexchanges,info,loggers,metrics,mappings,sessions,shutdown,prometheus"
+spring:
+  application:
+    name: licensing-service
