@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.jxxchallenger.smia.license.repository.LicenseMapper">
+  <resultMap id="BaseResultMap" type="io.jxxchallenger.smia.license.model.License">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="license_id" jdbcType="VARCHAR" property="licenseId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="organization_id" jdbcType="VARCHAR" property="organizationId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="license_type" jdbcType="VARCHAR" property="licenseType" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, license_id, description, organization_id, product_name, license_type, comment
+  </sql>
+  <select id="selectByExample" parameterType="io.jxxchallenger.smia.license.model.example.LicenseExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from license
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from license
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from license
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="io.jxxchallenger.smia.license.model.example.LicenseExample">
+    delete from license
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="io.jxxchallenger.smia.license.model.License" useGeneratedKeys="true">
+    insert into license (license_id, description, organization_id, 
+      product_name, license_type, comment
+      )
+    values (#{licenseId,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{organizationId,jdbcType=VARCHAR}, 
+      #{productName,jdbcType=VARCHAR}, #{licenseType,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="io.jxxchallenger.smia.license.model.License" useGeneratedKeys="true">
+    insert into license
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="licenseId != null">
+        license_id,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="organizationId != null">
+        organization_id,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="licenseType != null">
+        license_type,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="licenseId != null">
+        #{licenseId,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null">
+        #{organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseType != null">
+        #{licenseType,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="io.jxxchallenger.smia.license.model.example.LicenseExample" resultType="java.lang.Long">
+    select count(*) from license
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update license
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=INTEGER},
+      </if>
+      <if test="row.licenseId != null">
+        license_id = #{row.licenseId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.description != null">
+        description = #{row.description,jdbcType=VARCHAR},
+      </if>
+      <if test="row.organizationId != null">
+        organization_id = #{row.organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.productName != null">
+        product_name = #{row.productName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.licenseType != null">
+        license_type = #{row.licenseType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comment != null">
+        comment = #{row.comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update license
+    set id = #{row.id,jdbcType=INTEGER},
+      license_id = #{row.licenseId,jdbcType=VARCHAR},
+      description = #{row.description,jdbcType=VARCHAR},
+      organization_id = #{row.organizationId,jdbcType=VARCHAR},
+      product_name = #{row.productName,jdbcType=VARCHAR},
+      license_type = #{row.licenseType,jdbcType=VARCHAR},
+      comment = #{row.comment,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="io.jxxchallenger.smia.license.model.License">
+    update license
+    <set>
+      <if test="licenseId != null">
+        license_id = #{licenseId,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null">
+        organization_id = #{organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseType != null">
+        license_type = #{licenseType,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.jxxchallenger.smia.license.model.License">
+    update license
+    set license_id = #{licenseId,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      organization_id = #{organizationId,jdbcType=VARCHAR},
+      product_name = #{productName,jdbcType=VARCHAR},
+      license_type = #{licenseType,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

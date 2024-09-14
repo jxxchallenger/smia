@@ -4,7 +4,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 public class License extends RepresentationModel<License>{
 
-    private int id;
+    private Integer id;
 
     private String licenseId;
 
@@ -16,11 +16,13 @@ public class License extends RepresentationModel<License>{
 
     private String licenseType;
 
-    public int getId() {
+    private String comment;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -64,9 +66,11 @@ public class License extends RepresentationModel<License>{
         this.licenseType = licenseType;
     }
 
-    @Override
-    public String toString() {
-        return "License [id=" + id + ", licenseId=" + licenseId + ", description=" + description + ", organizationId="
-                + organizationId + ", productName=" + productName + ", licenseType=" + licenseType + "]";
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

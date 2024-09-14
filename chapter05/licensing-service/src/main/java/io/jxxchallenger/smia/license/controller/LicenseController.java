@@ -36,13 +36,13 @@ public class LicenseController {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateLicense(@PathVariable String organizationId, @RequestBody License license) {
-        return ResponseEntity.ok(licenseService.updateLicense(license, organizationId));
+    public ResponseEntity<License> updateLicense(@PathVariable String organizationId, @RequestBody License license) {
+        return ResponseEntity.ok(licenseService.updateLicense(license));
     }
 
     @PostMapping
-    public ResponseEntity<String> createLicense(@PathVariable String organizationId, @RequestBody License license) {
-        return ResponseEntity.ok(licenseService.createLicense(license, organizationId));
+    public ResponseEntity<License> createLicense(@PathVariable String organizationId, @RequestBody License license) {
+        return ResponseEntity.ok(licenseService.createLicense(license));
     }
 
     @DeleteMapping(value = "/{licenseId}")
