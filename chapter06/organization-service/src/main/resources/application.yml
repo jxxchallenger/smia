@@ -1,0 +1,17 @@
+#debug: true
+spring:
+  application:
+    name: organization-service
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      discovery: 
+        enabled: true
+        service-id: config-server
+#      uri: http://192.168.100.12:8080
+# 2024-09-29
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.100.10:8080/eureka
