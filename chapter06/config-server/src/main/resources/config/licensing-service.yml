@@ -1,0 +1,13 @@
+example:
+  property: I AM THE DEFAULT
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "beans,caches,conditions,configprops,env,health,httpexchanges,info,loggers,metrics,mappings,sessions,shutdown,prometheus"
+spring: 
+  datasource: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
