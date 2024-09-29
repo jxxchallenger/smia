@@ -1,0 +1,27 @@
+management:
+  endpoint:
+    env:
+      show-values: ALWAYS
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "beans,caches,conditions,configprops,env,health,httpexchanges,info,loggers,metrics,mappings,sessions,shutdown,prometheus"
+spring:
+  application:
+    name: licensing-service
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+# 2024-09-29
+      discovery: 
+        enabled: true
+        service-id: config-server
+#      uri: http://192.168.100.12:8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.100.10:8080/eureka

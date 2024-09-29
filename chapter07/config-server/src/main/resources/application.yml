@@ -1,0 +1,30 @@
+debug: false
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "beans,caches,conditions,configprops,env,health,httpexchanges,info,loggers,metrics,mappings,sessions,shutdown,prometheus"
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+        jdbc:
+          sql: SELECT `KEY`, `VALUE` from `PROPERTIES` where APPLICATION=? and PROFILE=? and LABEL=?
+          sql-without-profile: SELECT `KEY`, `VALUE` from `PROPERTIES` where APPLICATION=? and PROFILE is null and LABEL=?
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.100.12:3306/spring_microservices
+    username: admin
+    password: 123456789
+  profiles:
+#    active: native
+    active: jdbc
