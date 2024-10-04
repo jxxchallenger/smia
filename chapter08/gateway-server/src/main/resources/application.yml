@@ -9,6 +9,19 @@ spring:
       discovery: 
         enabled: true
         service-id: config-server
+# move to configuration center
+#    gateway: 
+#      discovery: 
+#        locator: 
+#          enabled: true
+#          lower-case-service-id: true
+#      routes:
+#        - id: organization-service
+#          uri: lb://organization-service
+#          predicates:
+#            - Path=/organization/**
+#          filters:
+#            - RewritePath=/organization/(?<path>.*), /$\{path}
 
 eureka: 
   client: 
