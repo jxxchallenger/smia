@@ -1,5 +1,6 @@
 package io.jxxchallenger.smia.license.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +10,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead.Type;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.jxxchallenger.smia.license.model.License;
 import io.jxxchallenger.smia.license.model.Organization;
 import io.jxxchallenger.smia.license.model.example.LicenseExample;
@@ -28,13 +34,13 @@ public class LicenseService {
     @Autowired
     private LicenseMapper licenseMapper;
 
-    @Autowired
+    //@Autowired
     private OrganizationDiscoveryClient discoveryClient;
 
     @Autowired
     private OrganizationRestTemplateClient organizationRestTemplateClient;
     
-    @Autowired
+    //@Autowired
     private OrganizationFeignClient organizationFeignClient;
 
     public License getLicense(String licenseId, String organizationId, String clientType) {
@@ -57,6 +63,7 @@ public class LicenseService {
         return license;
     }
 
+    @CircuitBreaker(name = "organizationService")
     private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
         switch (clientType) {
         case "feign":
@@ -91,5 +98,28 @@ public class LicenseService {
                 messageSource.getMessage("license.delete.message", null, LocaleContextHolder.getLocale()), licenseId,
                 organizationId);
         return responseMessage;
+    }
+
+    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")
+    @Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
+    @RateLimiter(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+    public List<License> getLicensesByOrganization(String organizationId) {
+        LOGGER.info("find all licenses belong to {}", organizationId);
+        LicenseExample example = new LicenseExample();
+        example.createCriteria().andOrganizationIdEqualTo(organizationId);
+        return licenseMapper.selectByExample(example);
+    }
+
+    private List<License> buildFallbackLicenseList(String organizationId, Throwable t) {
+        LOGGER.info("fallback");
+        List<License> fallbackList = new ArrayList<License>();
+        License license = new License();
+        license.setLicenseId(organizationId);
+        license.setLicenseId("0000000-00-00000");
+        license.setOrganizationId(organizationId);
+        license.setProductName("Sorry no licensing information currently available");
+        fallbackList.add(license);
+        return fallbackList;
     }
 }

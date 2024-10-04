@@ -7,7 +7,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "beans,caches,conditions,configprops,env,health,httpexchanges,info,loggers,metrics,mappings,sessions,shutdown,prometheus"
+        include: "beans,caches,conditions,configprops,env,health,httpexchanges,info,loggers,metrics,mappings,sessions,shutdown,prometheus,threaddump,circuitbreakers,circuitbreakerevents"
 spring:
   application:
     name: licensing-service
@@ -25,3 +25,52 @@ eureka:
   client:
     service-url:
       defaultZone: http://192.168.100.10:8080/eureka
+
+resilience4j.circuitbreaker:
+  instances:
+    licenseService:
+      registerHealthIndicator: true
+      waitDurationInOpenState: 10s
+      failureRateThreshold: 50
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+        - java.util.concurrent.TimeoutException
+        - org.springframework.web.client.ResourceAccessException
+    organizationService:
+      registerHealthIndicator: true
+      waitDurationInOpenState: 20s
+      failureRateThreshold: 60
+
+resilience4j.bulkhead:
+  instances:
+    bulkheadLicenseService:
+      maxConcurrentCalls: 10
+
+resilience4j.thread-pool-bulkhead:
+  instances:
+    bulkheadLicenseService:
+      maxThreadPoolSize: 2
+      coreThreadPoolSize: 2
+      queueCapacity: 5
+      writableStackTraceEnabled: true
+resilience4j.retry: 
+  instances: 
+    retryLicenseService: 
+      maxRetryAttempts: 5
+      waitDuration: 1000
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      retry-exceptions:
+        - java.util.concurrent.TimeoutException
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+
+resilience4j.ratelimiter:
+  instances: 
+    licenseService:
+      limitForPeriod: 10
+      limitRefreshPeriod: 1s
+      timeoutDuration: 1000ms
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100

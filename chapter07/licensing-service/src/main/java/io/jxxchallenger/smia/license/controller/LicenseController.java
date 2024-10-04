@@ -1,6 +1,9 @@
 package io.jxxchallenger.smia.license.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,5 +57,10 @@ public class LicenseController {
     @DeleteMapping(value = "/{licenseId}")
     public ResponseEntity<String> deleteLicense(@PathVariable String organizationId, @PathVariable String licenseId) {
         return ResponseEntity.ok(licenseService.deleteLicense(licenseId, organizationId));
+    }
+
+    @GetMapping
+    public List<License> getLicenses(@PathVariable String organizationId) {
+        return licenseService.getLicensesByOrganization(organizationId);
     }
 }
