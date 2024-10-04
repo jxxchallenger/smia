@@ -1,0 +1,31 @@
+# debug: true
+spring: 
+  application: 
+    name: gateway-server
+  config:
+    import: "optional:configserver:"
+  cloud: 
+    config: 
+      discovery: 
+        enabled: true
+        service-id: config-server
+
+eureka: 
+  client: 
+    service-url:
+      defaultZone: http://192.168.100.10:8080/eureka
+  instance: 
+    prefer-ip-address: true
+
+management: 
+  endpoint: 
+    env: 
+      show-values: ALWAYS
+    gateway:
+      enabled: true
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "beans,caches,conditions,configprops,env,gateway,health,httpexchanges,info,loggers,metrics,mappings,sessions,shutdown,prometheus,refresh,threaddump"
